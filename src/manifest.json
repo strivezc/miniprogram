@@ -1,0 +1,30 @@
+{
+  "name": "",
+  "appid": "wx20e9293c6f0626f2",
+  "description": "",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  /* 小程序特有相关 */
+  "mp-weixin": {
+    "appid": "wx20e9293c6f0626f2",
+    "plugins": {},
+    "setting": {
+      "urlCheck": false,
+      "packNpmManually": true,
+      "packNpmRelationList": [
+        {
+          "packageJsonPath": "./package.json",
+          "miniprogramNpmDistDir": "./miniprogram/"
+        }
+      ]
+    },
+    "usingComponents": true,
+    "useExtendedLib": {},
+    "permission": {}
+  },
+  "uniStatistics": {
+    "enable": false
+  },
+  "vueVersion": "3"
+}

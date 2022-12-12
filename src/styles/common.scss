@@ -1,0 +1,65 @@
+@import './vars.scss';
+@import './vars.scss';
+@import './mixins.scss';
+
+// 保证在不同设备上提供最佳的视觉体验。
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB',
+    'Microsoft Yahei', sans-serif;
+}
+
+page,
+view,
+text {
+  box-sizing: border-box;
+  font-size: 28rpx;
+}
+
+.text-line-1 {
+  @include text-eli;
+  -webkit-line-clamp: 1;
+}
+
+.text-line-2 {
+  @include text-eli;
+  -webkit-line-clamp: 2;
+}
+
+.text-line-3 {
+  @include text-eli;
+  -webkit-line-clamp: 3;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.flex-row-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flex1 {
+  flex: 1;
+}
