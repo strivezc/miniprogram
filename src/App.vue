@@ -1,44 +1,49 @@
-<script setup lang="ts">
-import { useCommonStore } from '@/stores/common'
-const commonStore = useCommonStore()
-onLaunch(() => {
-  commonStore.getSystemInfo()
+<script>
+import { mapActions, mapState } from 'pinia'
+import { useUserStore } from '@/store'
 
-
-
-})
-onShow(() => {
-  console.log('App Show')
-})
-onHide(() => {
-  console.log('App Hide')
-})
-
-// 获取系统信息
+  export default {
+    onLaunch: function () {
+      console.log('App Launch');
+      uni.loadFontFace({
+        global: true,
+        family: 'Resource Han Rounded CN',
+        source:
+          'url("https://talk915-1302759139.cos.ap-beijing.myqcloud.com/data/tool/ResourceHanRoundedCNMedium.ttf")',
+        success() {
+          console.log('loadFontFace success-family');
+        },
+        complete() {
+          console.log('loadFontFace complete');
+        },
+      });
+    },
+    onShow: function () {
+      console.log('App Show');
+      if (this.appletLoginStatus===null) {
+        uni.login({
+          provider: 'weixin',
+          success: (loginRes) => {
+            this.getAppletLoginStatus(loginRes.code)
+          },
+        });
+      }
+    },
+    onHide: function () {
+      console.log('App Hide');
+    },
+    computed: {
+      ...mapState(useUserStore, ['appletLoginStatus' ])
+    },
+    methods:{
+      ...mapActions(useUserStore, ['getAppletLoginStatus' ]),
+    }
+  };
 </script>
-<style>
-@import './wxcomponents/vant/common/index.wxss';
-@import 'static/iconfont/iconfont.css';
-/*
-     * 引入iconfont字体图标
-    */
-@font-face {
-  font-family: 'iconfont';
-  src: url('/static/iconfont/iconfont.ttf') format('truetype');
-}
-
-.common-empty .common-empty-img {
-  display: block;
-  width: 500rpx;
-  height: 500rpx;
-  margin: 100rpx auto 20rpx;
-}
-.common-empty .common-empty-text {
-  color: #666;
-  text-align: center;
-}
-</style>
 
 <style lang="scss">
-@import './styles/common.scss';
+  @import './wxcomponents/vant/common/index.wxss';
+  /*每个页面公共css */
+  @import './styles/public.scss';
+  @import './styles/animate.min.css';
 </style>

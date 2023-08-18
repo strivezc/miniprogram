@@ -1,16 +1,16 @@
-import Pen, { penCache, clearPenCache } from './lib/pen';
-import Downloader from './lib/downloader';
-import WxCanvas from './lib/wx-canvas';
+import Pen, { penCache, clearPenCache } from "./lib/pen";
+import Downloader from "./lib/downloader";
+import WxCanvas from "./lib/wx-canvas";
 
-const util = require('./lib/util');
-const calc = require('./lib/calc');
+const util = require("./lib/util");
+const calc = require("./lib/calc");
 
 const downloader = new Downloader();
 
 // 最大尝试的绘制次数
 const MAX_PAINT_COUNT = 5;
 const ACTION_DEFAULT_SIZE = 24;
-const ACTION_OFFSET = '2rpx';
+const ACTION_OFFSET = "2rpx";
 Component({
   canvasWidthInPx: 0,
   canvasHeightInPx: 0,
@@ -105,9 +105,9 @@ Component({
   },
 
   data: {
-    picURL: '',
+    picURL: "",
     showCanvas: true,
-    painterStyle: '',
+    painterStyle: "",
   },
 
   methods: {
@@ -123,7 +123,11 @@ Component({
     },
 
     isNeedRefresh(newVal, oldVal) {
-      if (!newVal || this.isEmpty(newVal) || (this.data.dirty && util.equal(newVal, oldVal))) {
+      if (
+        !newVal ||
+        this.isEmpty(newVal) ||
+        (this.data.dirty && util.equal(newVal, oldVal))
+      ) {
         return false;
       }
       return true;
@@ -131,27 +135,34 @@ Component({
 
     getBox(rect, type) {
       const boxArea = {
-        type: 'rect',
+        type: "rect",
         css: {
           height: `${rect.bottom - rect.top}px`,
           width: `${rect.right - rect.left}px`,
           left: `${rect.left}px`,
           top: `${rect.top}px`,
-          borderWidth: '4rpx',
-          borderColor: '#1A7AF8',
-          color: 'transparent',
+          borderWidth: "4rpx",
+          borderColor: "#1A7AF8",
+          color: "transparent",
         },
       };
-      if (type === 'text') {
+      if (type === "text") {
         boxArea.css = Object.assign({}, boxArea.css, {
-          borderStyle: 'dashed',
+          borderStyle: "dashed",
         });
       }
-      if (this.properties.customActionStyle && this.properties.customActionStyle.border) {
-        boxArea.css = Object.assign({}, boxArea.css, this.properties.customActionStyle.border);
+      if (
+        this.properties.customActionStyle &&
+        this.properties.customActionStyle.border
+      ) {
+        boxArea.css = Object.assign(
+          {},
+          boxArea.css,
+          this.properties.customActionStyle.border
+        );
       }
       Object.assign(boxArea, {
-        id: 'box',
+        id: "box",
       });
       return boxArea;
     },
@@ -161,8 +172,11 @@ Component({
       const { customActionStyle } = this.properties;
       if (customActionStyle && customActionStyle.scale) {
         scaleArea = {
-          type: 'image',
-          url: type === 'text' ? customActionStyle.scale.textIcon : customActionStyle.scale.imageIcon,
+          type: "image",
+          url:
+            type === "text"
+              ? customActionStyle.scale.textIcon
+              : customActionStyle.scale.imageIcon,
           css: {
             height: `${2 * ACTION_DEFAULT_SIZE}rpx`,
             width: `${2 * ACTION_DEFAULT_SIZE}rpx`,
@@ -171,25 +185,33 @@ Component({
         };
       } else {
         scaleArea = {
-          type: 'rect',
+          type: "rect",
           css: {
             height: `${2 * ACTION_DEFAULT_SIZE}rpx`,
             width: `${2 * ACTION_DEFAULT_SIZE}rpx`,
             borderRadius: `${ACTION_DEFAULT_SIZE}rpx`,
-            color: '#0000ff',
+            color: "#0000ff",
           },
         };
       }
       scaleArea.css = Object.assign({}, scaleArea.css, {
-        align: 'center',
+        align: "center",
         left: `${rect.right + ACTION_OFFSET.toPx()}px`,
         top:
-          type === 'text'
-            ? `${rect.top - ACTION_OFFSET.toPx() - scaleArea.css.height.toPx() / 2}px`
-            : `${rect.bottom - ACTION_OFFSET.toPx() - scaleArea.css.height.toPx() / 2}px`,
+          type === "text"
+            ? `${
+                rect.top -
+                ACTION_OFFSET.toPx() -
+                scaleArea.css.height.toPx() / 2
+              }px`
+            : `${
+                rect.bottom -
+                ACTION_OFFSET.toPx() -
+                scaleArea.css.height.toPx() / 2
+              }px`,
       });
       Object.assign(scaleArea, {
-        id: 'scale',
+        id: "scale",
       });
       return scaleArea;
     },
@@ -199,7 +221,7 @@ Component({
       const { customActionStyle } = this.properties;
       if (customActionStyle && customActionStyle.scale) {
         deleteArea = {
-          type: 'image',
+          type: "image",
           url: customActionStyle.delete.icon,
           css: {
             height: `${2 * ACTION_DEFAULT_SIZE}rpx`,
@@ -209,22 +231,24 @@ Component({
         };
       } else {
         deleteArea = {
-          type: 'rect',
+          type: "rect",
           css: {
             height: `${2 * ACTION_DEFAULT_SIZE}rpx`,
             width: `${2 * ACTION_DEFAULT_SIZE}rpx`,
             borderRadius: `${ACTION_DEFAULT_SIZE}rpx`,
-            color: '#0000ff',
+            color: "#0000ff",
           },
         };
       }
       deleteArea.css = Object.assign({}, deleteArea.css, {
-        align: 'center',
+        align: "center",
         left: `${rect.left - ACTION_OFFSET.toPx()}px`,
-        top: `${rect.top - ACTION_OFFSET.toPx() - deleteArea.css.height.toPx() / 2}px`,
+        top: `${
+          rect.top - ACTION_OFFSET.toPx() - deleteArea.css.height.toPx() / 2
+        }px`,
       });
       Object.assign(deleteArea, {
-        id: 'delete',
+        id: "delete",
       });
       return deleteArea;
     },
@@ -275,14 +299,14 @@ Component({
       if (newVal && newVal.url && doView.url && newVal.url !== doView.url) {
         downloader
           .download(newVal.url, this.properties.LRU)
-          .then(path => {
-            if (newVal.url.startsWith('https')) {
+          .then((path) => {
+            if (newVal.url.startsWith("https")) {
               doView.originUrl = newVal.url;
             }
             doView.url = path;
             wx.getImageInfo({
               src: path,
-              success: res => {
+              success: (res) => {
                 doView.sHeight = res.height;
                 doView.sWidth = res.width;
                 this.reDraw(doView, callback, isMoving);
@@ -292,13 +316,17 @@ Component({
               },
             });
           })
-          .catch(error => {
+          .catch((error) => {
             // 未下载成功，直接绘制
             console.error(error);
             this.reDraw(doView, callback, isMoving);
           });
       } else {
-        newVal && newVal.text && doView.text && newVal.text !== doView.text && (doView.text = newVal.text);
+        newVal &&
+          newVal.text &&
+          doView.text &&
+          newVal.text !== doView.text &&
+          (doView.text = newVal.text);
         newVal &&
           newVal.content &&
           doView.content &&
@@ -316,9 +344,9 @@ Component({
       };
       const pen = new Pen(this.globalContext, draw);
 
-      pen.paint(callbackInfo => {
+      pen.paint((callbackInfo) => {
         callback && callback(callbackInfo);
-        this.triggerEvent('viewUpdate', {
+        this.triggerEvent("viewUpdate", {
           view: this.touchedView,
         });
       });
@@ -346,8 +374,13 @@ Component({
 
     isInDelete(x, y) {
       for (const view of this.block.views) {
-        if (view.id === 'delete') {
-          return x > view.rect.left && y > view.rect.top && x < view.rect.right && y < view.rect.bottom;
+        if (view.id === "delete") {
+          return (
+            x > view.rect.left &&
+            y > view.rect.top &&
+            x < view.rect.right &&
+            y < view.rect.bottom
+          );
         }
       }
       return false;
@@ -355,8 +388,13 @@ Component({
 
     isInScale(x, y) {
       for (const view of this.block.views) {
-        if (view.id === 'scale') {
-          return x > view.rect.left && y > view.rect.top && x < view.rect.right && y < view.rect.bottom;
+        if (view.id === "scale") {
+          return (
+            x > view.rect.left &&
+            y > view.rect.top &&
+            x < view.rect.right &&
+            y < view.rect.bottom
+          );
         }
       }
       return false;
@@ -374,7 +412,12 @@ Component({
       for (let i = totalLayerCount - 1; i >= 0; i--) {
         const view = this.currentPalette.views[i];
         const { rect } = view;
-        if (this.touchedView && this.touchedView.id && this.touchedView.id === view.id && this.isInDelete(x, y, rect)) {
+        if (
+          this.touchedView &&
+          this.touchedView.id &&
+          this.touchedView.id === view.id &&
+          this.isInDelete(x, y, rect)
+        ) {
           canBeTouched.length = 0;
           deleteIndex = i;
           isDelete = true;
@@ -392,7 +435,7 @@ Component({
         this.findedIndex = -1;
       } else {
         let i = 0;
-        const touchAble = canBeTouched.filter(item => Boolean(item.view.id));
+        const touchAble = canBeTouched.filter((item) => Boolean(item.view.id));
         if (touchAble.length === 0) {
           this.findedIndex = canBeTouched[0].index;
         } else {
@@ -407,7 +450,7 @@ Component({
           }
           this.touchedView = touchAble[i].view;
           this.findedIndex = touchAble[i].index;
-          this.triggerEvent('viewClicked', {
+          this.triggerEvent("viewClicked", {
             view: this.touchedView,
           });
         }
@@ -416,14 +459,14 @@ Component({
         // 证明点击了背景 或无法移动的view
         this.frontContext.draw();
         if (isDelete) {
-          this.triggerEvent('touchEnd', {
+          this.triggerEvent("touchEnd", {
             view: this.currentPalette.views[deleteIndex],
             index: deleteIndex,
-            type: 'delete',
+            type: "delete",
           });
           this.doAction();
         } else if (this.findedIndex < 0) {
-          this.triggerEvent('viewClicked', {});
+          this.triggerEvent("viewClicked", {});
         }
         this.findedIndex = -1;
         this.prevFindedIndex = -1;
@@ -494,7 +537,7 @@ Component({
       if (current - this.startTimeStamp <= 500 && !this.hasMove) {
         !this.isScale && this.onClick(e);
       } else if (this.touchedView && !this.isEmpty(this.touchedView)) {
-        this.triggerEvent('touchEnd', {
+        this.triggerEvent("touchEnd", {
           view: this.touchedView,
         });
       }
@@ -539,8 +582,8 @@ Component({
         css = {
           width: `${newW}px`,
         };
-        if (type !== 'text') {
-          if (type === 'image') {
+        if (type !== "text") {
+          if (type === "image") {
             css.height = `${(newW * this.startH) / this.startW}px`;
           } else {
             css.height = `${newH}px`;
@@ -563,12 +606,14 @@ Component({
           },
         },
         null,
-        !this.isScale,
+        !this.isScale
       );
     },
 
     initScreenK() {
-      if (!(getApp() && getApp().systemInfo && getApp().systemInfo.screenWidth)) {
+      if (
+        !(getApp() && getApp().systemInfo && getApp().systemInfo.screenWidth)
+      ) {
         try {
           getApp().systemInfo = wx.getSystemInfoSync();
         } catch (e) {
@@ -589,30 +634,52 @@ Component({
       }
       this.isDisabled = true;
       this.initScreenK();
-      this.downloadImages(this.properties.dancePalette).then(async palette => {
-        this.currentPalette = palette;
-        const { width, height } = palette;
+      this.downloadImages(this.properties.dancePalette).then(
+        async (palette) => {
+          this.currentPalette = palette;
+          const { width, height } = palette;
 
-        if (!width || !height) {
-          console.error(`You should set width and height correctly for painter, width: ${width}, height: ${height}`);
-          return;
+          if (!width || !height) {
+            console.error(
+              `You should set width and height correctly for painter, width: ${width}, height: ${height}`
+            );
+            return;
+          }
+          this.setData({
+            painterStyle: `width:${width.toPx()}px;height:${height.toPx()}px;`,
+          });
+          this.frontContext ||
+            (this.frontContext = await this.getCanvasContext(
+              this.properties.use2D,
+              "front"
+            ));
+          this.bottomContext ||
+            (this.bottomContext = await this.getCanvasContext(
+              this.properties.use2D,
+              "bottom"
+            ));
+          this.topContext ||
+            (this.topContext = await this.getCanvasContext(
+              this.properties.use2D,
+              "top"
+            ));
+          this.globalContext ||
+            (this.globalContext = await this.getCanvasContext(
+              this.properties.use2D,
+              "k-canvas"
+            ));
+          new Pen(this.bottomContext, palette, this.properties.use2D).paint(
+            () => {
+              this.isDisabled = false;
+              this.isDisabled = this.outterDisabled;
+              this.triggerEvent("didShow");
+            }
+          );
+          this.globalContext.draw();
+          this.frontContext.draw();
+          this.topContext.draw();
         }
-        this.setData({
-          painterStyle: `width:${width.toPx()}px;height:${height.toPx()}px;`,
-        });
-        this.frontContext || (this.frontContext = await this.getCanvasContext(this.properties.use2D, 'front'));
-        this.bottomContext || (this.bottomContext = await this.getCanvasContext(this.properties.use2D, 'bottom'));
-        this.topContext || (this.topContext = await this.getCanvasContext(this.properties.use2D, 'top'));
-        this.globalContext || (this.globalContext = await this.getCanvasContext(this.properties.use2D, 'k-canvas'));
-        new Pen(this.bottomContext, palette, this.properties.use2D).paint(() => {
-          this.isDisabled = false;
-          this.isDisabled = this.outterDisabled;
-          this.triggerEvent('didShow');
-        });
-        this.globalContext.draw();
-        this.frontContext.draw();
-        this.topContext.draw();
-      });
+      );
       this.touchedView = {};
     },
 
@@ -621,7 +688,9 @@ Component({
       const { width, height } = this.properties.palette;
 
       if (!width || !height) {
-        console.error(`You should set width and height correctly for painter, width: ${width}, height: ${height}`);
+        console.error(
+          `You should set width and height correctly for painter, width: ${width}, height: ${height}`
+        );
         return;
       }
 
@@ -632,7 +701,10 @@ Component({
         needScale = this.properties.use2D;
       }
       if (this.properties.widthPixels) {
-        setStringPrototype(this.screenK, this.properties.widthPixels / this.canvasWidthInPx);
+        setStringPrototype(
+          this.screenK,
+          this.properties.widthPixels / this.canvasWidthInPx
+        );
         this.canvasWidthInPx = this.properties.widthPixels;
       }
 
@@ -645,9 +717,12 @@ Component({
           photoStyle: `width:${this.canvasWidthInPx}px;height:${this.canvasHeightInPx}px;`,
         },
         function () {
-          this.downloadImages(this.properties.palette).then(async palette => {
+          this.downloadImages(this.properties.palette).then(async (palette) => {
             if (!this.photoContext) {
-              this.photoContext = await this.getCanvasContext(this.properties.use2D, 'photo');
+              this.photoContext = await this.getCanvasContext(
+                this.properties.use2D,
+                "photo"
+              );
             }
             if (needScale) {
               const scale = getApp().systemInfo.pixelRatio;
@@ -660,7 +735,7 @@ Component({
             });
             setStringPrototype(this.screenK, this.properties.scaleRatio);
           });
-        },
+        }
       );
     },
 
@@ -672,7 +747,7 @@ Component({
         if (paletteCopy.background) {
           preCount++;
           downloader.download(paletteCopy.background, this.properties.LRU).then(
-            path => {
+            (path) => {
               paletteCopy.background = path;
               completeCount++;
               if (preCount === completeCount) {
@@ -684,29 +759,33 @@ Component({
               if (preCount === completeCount) {
                 resolve(paletteCopy);
               }
-            },
+            }
           );
         }
         if (paletteCopy.views) {
           for (const view of paletteCopy.views) {
-            if (view && view.type === 'image' && view.url) {
+            if (view && view.type === "image" && view.url) {
               preCount++;
               /* eslint-disable no-loop-func */
               downloader.download(view.url, this.properties.LRU).then(
-                path => {
+                (path) => {
                   view.originUrl = view.url;
                   view.url = path;
                   wx.getImageInfo({
                     src: path,
-                    success: res => {
+                    success: (res) => {
                       // 获得一下图片信息，供后续裁减使用
                       view.sWidth = res.width;
                       view.sHeight = res.height;
                     },
-                    fail: error => {
+                    fail: (error) => {
                       // 如果图片坏了，则直接置空，防止坑爹的 canvas 画崩溃了
-                      console.warn(`getImageInfo ${view.originUrl} failed, ${JSON.stringify(error)}`);
-                      view.url = '';
+                      console.warn(
+                        `getImageInfo ${
+                          view.originUrl
+                        } failed, ${JSON.stringify(error)}`
+                      );
+                      view.url = "";
                     },
                     complete: () => {
                       completeCount++;
@@ -721,7 +800,7 @@ Component({
                   if (preCount === completeCount) {
                     resolve(paletteCopy);
                   }
-                },
+                }
               );
             }
           }
@@ -734,46 +813,59 @@ Component({
 
     saveImgToLocal() {
       const that = this;
+      const optionsOf2d = {
+        canvas: that.canvasNode,
+      };
+      const optionsOfOld = {
+        canvasId: "photo",
+        destWidth: that.canvasWidthInPx,
+        destHeight: that.canvasHeightInPx,
+      };
       setTimeout(() => {
         wx.canvasToTempFilePath(
           {
-            canvasId: 'photo',
-            canvas: that.properties.use2D ? that.canvasNode : null,
-            destWidth: that.canvasWidthInPx,
-            destHeight: that.canvasHeightInPx,
+            ...(that.properties.use2D ? optionsOf2d : optionsOfOld),
             success: function (res) {
               that.getImageInfo(res.tempFilePath);
             },
             fail: function (error) {
-              console.error(`canvasToTempFilePath failed, ${JSON.stringify(error)}`);
-              that.triggerEvent('imgErr', {
+              console.error(
+                `canvasToTempFilePath failed, ${JSON.stringify(error)}`
+              );
+              that.triggerEvent("imgErr", {
                 error: error,
               });
             },
           },
-          this,
+          this
         );
       }, 300);
     },
 
     getCanvasContext(use2D, id) {
       const that = this;
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (use2D) {
           const query = wx.createSelectorQuery().in(that);
           const selectId = `#${id}`;
           query
             .select(selectId)
             .fields({ node: true, size: true })
-            .exec(res => {
+            .exec((res) => {
               that.canvasNode = res[0].node;
-              const ctx = that.canvasNode.getContext('2d');
-              const wxCanvas = new WxCanvas('2d', ctx, id, true, that.canvasNode);
+              const ctx = that.canvasNode.getContext("2d");
+              const wxCanvas = new WxCanvas(
+                "2d",
+                ctx,
+                id,
+                true,
+                that.canvasNode
+              );
               resolve(wxCanvas);
             });
         } else {
           const temp = wx.createCanvasContext(id, that);
-          resolve(new WxCanvas('mina', temp, id, true));
+          resolve(new WxCanvas("mina", temp, id, true));
         }
       });
     },
@@ -782,11 +874,11 @@ Component({
       const that = this;
       wx.getImageInfo({
         src: filePath,
-        success: infoRes => {
+        success: (infoRes) => {
           if (that.paintCount > MAX_PAINT_COUNT) {
             const error = `The result is always fault, even we tried ${MAX_PAINT_COUNT} times`;
             console.error(error);
-            that.triggerEvent('imgErr', {
+            that.triggerEvent("imgErr", {
               error: error,
             });
             return;
@@ -794,11 +886,12 @@ Component({
           // 比例相符时才证明绘制成功，否则进行强制重绘制
           if (
             Math.abs(
-              (infoRes.width * that.canvasHeightInPx - that.canvasWidthInPx * infoRes.height) /
-                (infoRes.height * that.canvasHeightInPx),
+              (infoRes.width * that.canvasHeightInPx -
+                that.canvasWidthInPx * infoRes.height) /
+                (infoRes.height * that.canvasHeightInPx)
             ) < 0.01
           ) {
-            that.triggerEvent('imgOK', {
+            that.triggerEvent("imgOK", {
               path: filePath,
             });
           } else {
@@ -806,9 +899,9 @@ Component({
           }
           that.paintCount++;
         },
-        fail: error => {
+        fail: (error) => {
           console.error(`getImageInfo failed, ${JSON.stringify(error)}`);
-          that.triggerEvent('imgErr', {
+          that.triggerEvent("imgErr", {
             error: error,
           });
         },
@@ -824,12 +917,12 @@ function setStringPrototype(screenK, scale) {
    * @param {Number} baseSize 当设置了 % 号时，设置的基准值
    */
   String.prototype.toPx = function toPx(_, baseSize) {
-    if (this === '0') {
+    if (this === "0") {
       return 0;
     }
     const REG = /-?[0-9]+(\.[0-9]+)?(rpx|px|%)/;
 
-    const parsePx = origin => {
+    const parsePx = (origin) => {
       const results = new RegExp(REG).exec(origin);
       if (!origin || !results) {
         console.error(`The size: ${origin} is illegal`);
@@ -839,11 +932,11 @@ function setStringPrototype(screenK, scale) {
       const value = parseFloat(origin);
 
       let res = 0;
-      if (unit === 'rpx') {
+      if (unit === "rpx") {
         res = Math.round(value * (screenK || 0.5) * (scale || 1));
-      } else if (unit === 'px') {
+      } else if (unit === "px") {
         res = Math.round(value * (scale || 1));
-      } else if (unit === '%') {
+      } else if (unit === "%") {
         res = Math.round((value * baseSize) / 100);
       }
       return res;
@@ -851,11 +944,14 @@ function setStringPrototype(screenK, scale) {
     const formula = /^calc\((.+)\)$/.exec(this);
     if (formula && formula[1]) {
       // 进行 calc 计算
-      const afterOne = formula[1].replace(/([^\s\(\+\-\*\/]+)\.(left|right|bottom|top|width|height)/g, word => {
-        const [id, attr] = word.split('.');
-        return penCache.viewRect[id][attr];
-      });
-      const afterTwo = afterOne.replace(new RegExp(REG, 'g'), parsePx);
+      const afterOne = formula[1].replace(
+        /([^\s\(\+\-\*\/]+)\.(left|right|bottom|top|width|height)/g,
+        (word) => {
+          const [id, attr] = word.split(".");
+          return penCache.viewRect[id][attr];
+        }
+      );
+      const afterTwo = afterOne.replace(new RegExp(REG, "g"), parsePx);
       return calc(afterTwo);
     } else {
       return parsePx(this);

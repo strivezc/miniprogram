@@ -1,10 +1,11 @@
-
 function isValidUrl(url) {
   return isOnlineUrl(url) || isDataUrl(url);
 }
 
 function isOnlineUrl(url) {
-  return /(ht|f)tp(s?):\/\/([^ \\/]*\.)+[^ \\/]*(:[0-9]+)?\/?/.test(url)
+  return /((ht|f)tp(s?)|cloud):\/\/([^ \\/]*\.)+[^ \\/]*(:[0-9]+)?\/?/.test(
+    url
+  );
 }
 
 function isDataUrl(url) {

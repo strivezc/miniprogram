@@ -94,4 +94,4 @@ function binb2hex(binarray) {
 
 module.exports = {
   hex_sha1,
-}
+};

@@ -1,6 +1,7 @@
 import { isDef, isNumber, isPlainObject, isPromise } from './validator';
 import { canIUseGroupSetData, canIUseNextTick } from './version';
 export { isDef } from './validator';
+export { getSystemInfoSync } from './version';
 export function range(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
@@ -14,13 +15,6 @@ export function nextTick(cb) {
         }, 1000 / 30);
     }
 }
-let systemInfo;
-export function getSystemInfoSync() {
-    if (systemInfo == null) {
-        systemInfo = wx.getSystemInfoSync();
-    }
-    return systemInfo;
-}
 export function addUnit(value) {
     if (!isDef(value)) {
         return undefined;
@@ -29,19 +23,9 @@ export function addUnit(value) {
     return isNumber(value) ? `${value}px` : value;
 }
 export function requestAnimationFrame(cb) {
-    const systemInfo = getSystemInfoSync();
-    if (systemInfo.platform === 'devtools') {
-        return setTimeout(() => {
-            cb();
-        }, 1000 / 30);
-    }
-    return wx
-        .createSelectorQuery()
-        .selectViewport()
-        .boundingClientRect()
-        .exec(() => {
+    return setTimeout(() => {
         cb();
-    });
+    }, 1000 / 30);
 }
 export function pickExclude(obj, keys) {
     if (!isPlainObject(obj)) {
