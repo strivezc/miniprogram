@@ -35,7 +35,8 @@
     "usingComponents": {
       "painter": "/wxcomponents/painter/painter",
       "van-popup": "/wxcomponents/vant/popup/index",
-      "van-count-down": "/wxcomponents/vant/count-down/index"
+      "van-count-down": "/wxcomponents/vant/count-down/index",
+      "privacy": "/wxcomponents/privacy/privacy"
     }
   },
   "tabBar": {
