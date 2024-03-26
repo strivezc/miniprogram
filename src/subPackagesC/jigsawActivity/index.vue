@@ -1,5 +1,8 @@
 <template>
   <view class="container">
+    <!-- #ifdef MP-WEIXIN -->
+    <privacy />
+    <!-- #endif -->
     <!--    <image src="@/subPackagesC/static/jigsaw/element/bg-1.png" class="bg"></image>-->
     <image src="@/subPackagesC/static/jigsaw/element/bg-1.png" class="bg"></image>
     <view class="canvas-wrap" :style="{ 'z-index': state.zIndex }">

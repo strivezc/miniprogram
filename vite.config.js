@@ -43,6 +43,7 @@ export default ({ command, mode }) => {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
           drop_console: env.VITE_BUILD_DROP_CONSOLE === 'true', // 去除 console
+          // drop_console: false, // 去除 console
           drop_debugger: true, // 去除 debugger
         },
       },

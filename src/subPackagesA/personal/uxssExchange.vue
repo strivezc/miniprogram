@@ -93,6 +93,7 @@
     phone: '',
     exchangeIconNum: 0,
     backHeight: 0,
+    fromUxss: ''
   });
   const systemInfo = getSystemInfo();
   state.backHeight = systemInfo.statusBarHeight + systemInfo.navigationBarHeight / 2;
@@ -191,12 +192,20 @@
     }
   };
   function openUxss() {
-    uni.navigateToMiniProgram({
-      appId: 'wx7c6b596dadbd45a4',
-      success(res) {
-        // 打开成功
-      },
-    });
+    if (state.fromUxss==='1') {
+      uni.navigateBackMiniProgram({
+        success(res) {
+          // 返回成功
+        }
+      })
+    } else {
+      uni.navigateToMiniProgram({
+        appId: 'wx7c6b596dadbd45a4',
+        success(res) {
+          // 打开成功
+        }
+      })
+    }
   }
   const setMaxNum = () => {
     const rate = Number(state.rate);
@@ -219,19 +228,24 @@
       }
       state.score = replaceVal;
       if (state.score) {
-        state.exchangeIconNum = (Number(state.score) / rate).toFixed(2);
+        state.exchangeIconNum = (Number(state.score) / rate).toFixed(2)
       } else {
-        state.exchangeIconNum = '0.00';
+        state.exchangeIconNum = '0.00'
       }
     });
   }
+
   function phoneMask(tel) {
-    if (!tel) return '';
-    return tel.replace(tel.substring(3, 7), '****');
+    if (!tel) return ''
+    return tel.replace(tel.substring(3, 7), '****')
   }
-  onLoad(() => {
-    getUserScore();
-  });
+
+  onLoad((option) => {
+    if (option.fromUxss == '1') {
+      state.fromUxss = '1'
+    }
+    getUserScore()
+  })
 </script>
 
 <style lang="scss" scoped>

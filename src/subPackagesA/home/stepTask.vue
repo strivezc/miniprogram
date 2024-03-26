@@ -60,6 +60,9 @@ const getDetails=async()=>{
   try {
     const {resultData} = await StepTaskService.queryStepInfo();
     state.detailData=resultData;
+    if (state.detailData.activityExplain) {
+      state.detailData.activityExplain = state.detailData.activityExplain.replace(/<img/g, '<img class="richImg"');
+    }
   } catch (e) {
     console.log(e, 'error')
   }
@@ -142,11 +145,17 @@ checkLogin()
 getDetails()
 </script>
 
+<style>
+  img {
+    max-width: 100%!important;
+    width: 100%;
+  }
+</style>
 <style scoped lang="scss">
 .stepTask{
   position: relative;
   background: linear-gradient(180deg, #F38D5E 0%, #FCDFA8 100%);
-  padding: 30rpx 32rpx 0;
+  padding: 30rpx 32rpx 240rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -170,6 +179,7 @@ getDetails()
   .banner{
     width: 686rpx;
     height: 304rpx;
+    border-radius: 16rpx;
   }
   .active-wrap{
     display: flex;
@@ -199,17 +209,22 @@ getDetails()
         margin-top: 15rpx;
         width: 120rpx;
         height: 120rpx;
+        border-radius: 8rpx;
       }
       .bottom-text{
         margin-top: 10rpx;
         font-size: 20rpx;
         font-weight: 500;
         color: #666666;
-        line-height: 24rpx;
         height: 48rpx;
+        max-width: 129rpx;
+        text-align: center;
         overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-height: 24rpx;
       }
       .button{
         margin-top: 5rpx;
@@ -225,6 +240,9 @@ getDetails()
         padding: 0;
         margin-left: 0;
         margin-right: 0;
+        &:after{
+          border: none;
+        }
       }
       .bg3{
         background: #CCCCCC;
@@ -265,6 +283,9 @@ getDetails()
       font-size: 24rpx;
       font-weight: 500;
       color: #666666;
+      img{
+        width: 100%;
+      }
     }
   }
   .button-wrap {
@@ -289,6 +310,9 @@ getDetails()
       color: #FFFFFF;
       line-height: 83rpx;
       text-align: center;
+      &:after{
+        border: none;
+      }
     }
   }
 }

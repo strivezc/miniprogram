@@ -157,6 +157,12 @@
         try {
           const { resultData } = await VoteService.queryActivityDetails();
           this.activityDetail = resultData;
+          if (this.activityDetail.activityRewards) {
+            this.activityDetail.activityRewards = this.activityDetail.activityRewards.replace(/<img/g, '<img class="richImg"');
+          }
+          if (this.activityDetail.activityExplain) {
+            this.activityDetail.activityExplain = this.activityDetail.activityExplain.replace(/<img/g, '<img class="richImg"');
+          }
         } catch (e) {
           console.log(e, 'error');
         }

@@ -20,7 +20,7 @@
                         :isLogin="isLogin"
                         @openContact="openContact">
         </activityDetail>
-        <shareButton v-if="showShare" class="share-button"></shareButton>
+        <shareButton v-if="showShare && isLogin" class="share-button"></shareButton>
       </view>
       <result ref="result"
               :status="resultStatus"
@@ -85,6 +85,7 @@ export default {
       this.getPrizeInfoByLogin()
       this.getDistributorCode()
     } else {
+      uni.hideShareMenu()
       this.getPrizeInfoByNoLogin()
     }
     setTimeout(() => {
@@ -155,10 +156,14 @@ export default {
     async getPrizeInfoByNoLogin() {
       try {
         const { resultData } = await LotteryService.queryNowRaffleInfo(this.lotteryCode)
+        if (resultData.activityExplain) {
+          resultData.activityExplain = resultData.activityExplain.replace(/<img/g, '<img class="richImg"');
+        }
         this.detailData = resultData || {}
         this.prizeInfoList = resultData.prizeInfoList
         this.prizeSortList = resultData.prizeSortList
         this.raffleCondition = resultData.raffleCondition
+
         // this.prizeRecordList = resultData.prizeRecordList;
         //转盘数据插入图片和活动名称
         this.prizeSortList.forEach(i => {
@@ -183,6 +188,9 @@ export default {
     async getPrizeInfoByLogin() {
       try {
         const { resultData } = await LotteryService.getPrizeActivityInfo(this.lotteryCode)
+        if (resultData.activityExplain) {
+          resultData.activityExplain = resultData.activityExplain.replace(/<img/g, '<img class="richImg"');
+        }
         this.detailData = resultData || {}
         this.prizeInfoList = resultData.prizeInfoList
         this.prizeSortList = resultData.prizeSortList

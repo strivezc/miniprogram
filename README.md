@@ -15,13 +15,10 @@ uni-app+vue3.2 + vite4.0 + uni-ui + pinia 微信小程序项目
 
 
 # 前言
-+ vue3已经发布两年多了，公司的项目用的还是vue2，最近刚好有空把之前uni-app写的小程序升一下vue3，供自己学习用和记录
-+ 这些技术都是第一次使用，很多实现&思路都是参考其他大佬的，如有不对的地方，欢迎各位大佬指正
-+ 项目示例已上传 github，有需要的可以参考 [uniapp-vue3-vite](https://github.com/strivezc/uniapp-vue3-vite)
++ vue3已经发布两年多了，公司的项目用的还是vue2，最近刚好有空把之前uni-app写的小程序升一下vue3
 
 
 # Vite创建项目
-+ 由于typescript还不熟练，所以不用在公司项目上了(o(*￣︶￣*)o)
 
 ```sh
 npx degit dcloudio/uni-preset-vue#vite uniapp-vue3-vite

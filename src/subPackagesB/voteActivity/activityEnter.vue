@@ -52,7 +52,7 @@
             // 没有看年度报告
             uni.showModal({
               title: '报名提示',
-              content: '参与投票报名，需要先查看您的2022年度学习报告',
+              content: '参与投票报名，需要先查看您的2023年度学习报告',
               confirmColor: '#0087FF',
               cancelColor: '#0087FF',
               success: function (res) {
@@ -63,7 +63,11 @@
               },
             });
           } else {
-            this.form.contestImg = resultData.tagTypeImg;
+            if (resultData.tagTypeImg) {
+              const arr = JSON.parse(resultData.tagTypeImg)
+              this.imgUrl = arr[0]
+              this.form.contestImg = arr[0];
+            }
           }
         } catch (e) {
           if (e.resultCode === 3) {
@@ -112,7 +116,7 @@
         if (!this.form.contestImg) {
           uni.showModal({
             title: '报名提示',
-            content: '参与投票报名，需要先查看您的2022年度学习报告生成参赛图片！',
+            content: '参与投票报名，需要先查看您的2023年度学习报告生成参赛图片！',
             confirmColor: '#0087FF',
             cancelColor: '#0087FF',
             success: function (res) {

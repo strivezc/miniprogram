@@ -7,6 +7,9 @@ const UserImg = 'userImg';
 const RecommendCode = 'recommendCode';
 const MobileArea = 'mobileArea';
 
+// 小程序账号绑定状态，0未绑定，1已绑定
+const AppletLoginStatus = 'appletLoginStatus';
+
 export function getToken() {
   return uni.getStorageSync(TokenKey);
 }
@@ -88,6 +91,12 @@ export function getMobileArea() {
 }
 export function removeMobileArea() {
   return uni.removeStorageSync(MobileArea);
+}
+export function setAppletLoginStatus(appletLoginStatus) {
+  return uni.setStorageSync(AppletLoginStatus, appletLoginStatus);
+}
+export function getAppletLoginStatus() {
+  return uni.getStorageSync(AppletLoginStatus);
 }
 export function clearStorageSync() {
   removeUserName();

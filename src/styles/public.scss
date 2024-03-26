@@ -228,3 +228,21 @@ checkbox.myRadioCheck .wx-checkbox-input-checked{
   display: block;
   margin: 5rpx 0;
 }
+.flex-c{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-l-c{
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+.flex-s-c{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+uni-modal .uni-modal__bd{
+  white-space: pre-wrap;
+}

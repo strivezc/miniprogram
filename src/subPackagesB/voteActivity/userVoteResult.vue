@@ -1,5 +1,8 @@
 <template>
   <view class="userVoteResult" :class="mask ? 'tl-show' : ''">
+    <!-- #ifdef MP-WEIXIN -->
+    <privacy />
+    <!-- #endif -->
     <view class="background">
       <image mode="scaleToFill" src="@/subPackagesB/static/vote/enterBg.png" class="bg"></image>
     </view>
@@ -28,13 +31,6 @@
   import { palette } from './components/image';
   import VoteService from '@/api/VoteService';
   import shareBg from '@/subPackagesB/static/vote/shareBg.png';
-  import element1 from '@/subPackagesB/static/vote/element1.png';
-  import element2 from '@/subPackagesB/static/vote/element2.png';
-  import tagType1 from '@/subPackagesB/static/vote/01.png';
-  import tagType2 from '@/subPackagesB/static/vote/02.png';
-  import tagType3 from '@/subPackagesB/static/vote/03.png';
-  import tagType4 from '@/subPackagesB/static/vote/04.png';
-  import tagType5 from '@/subPackagesB/static/vote/05.png';
 
   export default {
     name: 'userVoteResult',
@@ -78,7 +74,11 @@
         try {
           const { resultData } = await VoteService.getInfoCanvass(this.voteId);
           this.shareInfo = resultData;
-          let tagType = resultData.tagType;
+          let avtar=''
+          if (resultData.tagTypeImg) {
+            const arr = JSON.parse(resultData.tagTypeImg)
+            avtar = arr[1]
+          }
           let url =
             import.meta.env.MODE === 'production'
               ? 'https://www.talk915.com'
@@ -86,37 +86,12 @@
           this.template = palette({
             url: shareBg,
             code: `${url}/h5/static/?voteId=${this.shareInfo.voteId}&recommendCode=${this.shareInfo.userDistributorCode}`,
-            avtar: this.getAvtar(tagType),
-            icon1: element1,
-            icon2: element2,
-            text1: `我是 ${this.shareInfo.voteId}号 选手`,
-            text2: this.shareInfo.userName,
+            avtar,
+            text1: `我是 ${this.shareInfo.voteId}号选手 ${this.shareInfo.userName}`,
           });
         } catch (e) {
           console.log(e, 'error');
         }
-      },
-      getAvtar(type) {
-        let img = null;
-        switch (type) {
-          case 0:
-            img = tagType1;
-            break;
-          case 1:
-            img = tagType2;
-            break;
-          case 2:
-            img = tagType3;
-            break;
-          case 3:
-            img = tagType4;
-            break;
-          case 4:
-            img = tagType5;
-            break;
-          default:
-        }
-        return img;
       },
       close() {
         this.$refs.share.close();

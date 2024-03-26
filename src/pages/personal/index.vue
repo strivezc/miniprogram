@@ -37,6 +37,7 @@
   import set from '@img/set.png';
   import defaultImage from '@img/default.png';
   import awardRecord from '@img/awardRecord.png';
+  import order from '@img/order.png';
 
   export default {
     name: 'personal',
@@ -52,6 +53,7 @@
           },
           { icon: votingRecord, text: '投票记录', url: '/subPackagesB/voteActivity/voteRecord' },
           { icon: awardRecord, text: '获奖记录', url: '/subPackagesA/personal/awardRecord' },
+          { icon: order, text: '我的订单', url: '/subPackagesA/personal/myOrder' },
           { icon: set, text: '设置', url: '/subPackagesA/personal/setting' },
         ],
         defaultImage,

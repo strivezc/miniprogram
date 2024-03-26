@@ -153,20 +153,30 @@ export default {
         this.isStart = false
         this.isFinished = true
         this.disabled = false
-        uni.showModal({
-          title: '提示',
-          content: e.resultMessage || '服务繁忙!',
-          confirmColor: '#0087FF',
-          showCancel: false,
-          success: (res) => {
-            if (e.resultCode === -1) {
-              this.resetToken()
-              uni.redirectTo({
-                url: `/subPackagesA/personal/chooseLoginType?redirect=/subPackagesB/lottery/index&lotteryCode=${this.lotteryCode}`
-              })
-            }
-          }
-        })
+        if (e.resultCode === -1) {
+          this.resetToken()
+          let code=this.lotteryCode
+          // to re-login
+          uni.showModal({
+            title: '提示',
+            content: '登录失效，请重新登录！',
+            confirmColor: '#0087FF',
+            cancelColor: '#999999',
+            success: function (res) {
+              if (res.confirm) {
+                uni.redirectTo({
+                  url: `/subPackagesA/personal/chooseLoginType?redirect=/subPackagesB/lottery/index&lotteryCode=${code}`
+                })
+              }
+            },
+          });
+        } else {
+          uni.showToast({
+            title: `操作异常，请联系管理员(${e.resultCode})!`,
+            icon: 'none',
+            duration: 2000,
+          });
+        }
       }
     }
   }
@@ -210,18 +220,19 @@ export default {
         transform-origin: 50% 330rpx;
 
         .title {
-          margin-top: 80rpx;
+          margin-top: 72rpx;
           color: #FD6D4F;
           font-size: 23rpx;
           line-height: 25rpx;
           text-align: center;
+          width: 138rpx;
         }
 
         .icon {
-          width: 90rpx;
-          height: 90rpx;
+          width: 86rpx;
+          height: 86rpx;
           display: block;
-          margin: 15rpx auto 0;
+          margin: 8rpx auto 0;
         }
       }
     }

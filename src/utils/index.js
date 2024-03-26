@@ -254,6 +254,30 @@ export const checkGetPhoneVersion = () => {
   }
 };
 
+export function goBack(path){
+  let pages = getCurrentPages();
+  //函数用于获取当前页面栈的实例，以数组形式按栈的顺序给出，第一个元素为首页，最后一个元素为当前页面
+  let num=pages.length
+  //当前页面栈总数
+  let backnum
+  //需要返回的页数
+  for(let i =0;i<num;i++){
+    //循环找到指定页面路由所在的页数
+    if(pages[i].route===path){
+      backnum=num-i-1
+      //计算返回的层数，总数-指定页面页数-1
+    }
+  }
+  if (!backnum) {
+    uni.switchTab({ url: '/pages/home/index' })
+  } else {
+    uni.navigateBack({
+      delta:backnum
+      //返回的页面数，如果 delta 大于现有页面数，则返回到首页。
+    })
+  }
+}
+
 /**
  * getSystemInfo 获取状态栏，导航栏高度
  * @statusBarHeight 状态栏高度
@@ -354,4 +378,21 @@ export function saveNetWorkImage(imageUrl) {
     }
   });
 
+}
+
+/**
+ * 获取指定日期是星期几
+ * @returns {string}
+ * @param date 可被new Date()解析的值
+ * @param language 语言，ch/en
+ */
+export function getWeek(date, language) {
+  const lang = language ? language : 'ch'
+  const ch = ['日', '一', '二', '三', '四', '五', '六']
+  const en = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const week = new Date(date).getDay()
+  if (lang === 'en') {
+    return en[week]
+  }
+  return `${ch[week]}`
 }

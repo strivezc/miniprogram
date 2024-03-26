@@ -1,6 +1,7 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { useUserStore } from '@/store'
+import { getAppletLoginStatus} from '@/utils/auth'
 
   export default {
     onLaunch: function () {
@@ -20,11 +21,12 @@ import { useUserStore } from '@/store'
     },
     onShow: function () {
       console.log('App Show');
-      if (this.appletLoginStatus===null) {
+      console.log(getAppletLoginStatus(),'appletLoginStatus')
+      if ((getAppletLoginStatus()??'')==='') {
         uni.login({
           provider: 'weixin',
           success: (loginRes) => {
-            this.getAppletLoginStatus(loginRes.code)
+            this.setAppletLoginStatus(loginRes.code)
           },
         });
       }
@@ -32,11 +34,8 @@ import { useUserStore } from '@/store'
     onHide: function () {
       console.log('App Hide');
     },
-    computed: {
-      ...mapState(useUserStore, ['appletLoginStatus' ])
-    },
     methods:{
-      ...mapActions(useUserStore, ['getAppletLoginStatus' ]),
+      ...mapActions(useUserStore, ['setAppletLoginStatus' ]),
     }
   };
 </script>

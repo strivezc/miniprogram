@@ -15,18 +15,18 @@
     <button class="shareMask"
             open-type="getPhoneNumber"
             @getphonenumber="decryptPhoneNumber"
-            v-show="props.isLogin && !userStore.appletLoginStatus"></button>
+            v-show="props.isLogin && !appletLoginStatus"></button>
     <button
         class="shareMask"
         @click="decryptPhoneNumber('isBaseLogin')"
-        v-show="props.isLogin && userStore.appletLoginStatus===1"
+        v-show="props.isLogin && appletLoginStatus===1"
     >
-      一键登录
     </button>
   </view>
 </template>
 
 <script setup>
+  import { getAppletLoginStatus} from '@/utils/auth'
   import { checkGetPhoneVersion } from '@/utils';
   import { useUserStore } from '@/store';
   import UserService from '@/api/UserService';
@@ -75,6 +75,7 @@
   });
   const emit = defineEmits(['handleAction','loginAction']);
   const animateClass = ref([]);
+  const appletLoginStatus = ref(getAppletLoginStatus());
   const getButtonType = computed(() => {
     const obj = {
       green: greenButton,
@@ -150,9 +151,13 @@
             userStore.setUserImg(resultData.userImg);
             userStore.setRecommendCode(resultData.recommendCode);
             userStore.setMobileArea(resultData.mobileArea);
-            userStore.getCourseAdviserQrCode();
-            if (val!=='isBaseLogin') { // 刷新微信账号绑定状态
-              userStore.getAppletLoginStatus(loginRes.code)
+            if (val!=='isBaseLogin' && getAppletLoginStatus()!==1) { // 刷新微信账号绑定状态
+              uni.login({
+                provider: 'weixin',
+                success: (res) => {
+                  userStore.setAppletLoginStatus(res.code)
+                },
+              });
             }
             emit('loginAction');
             console.log(res, 'appletLogin-res');

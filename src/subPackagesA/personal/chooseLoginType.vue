@@ -1,5 +1,8 @@
 <template>
   <view class="chooseLoginType">
+    <!-- #ifdef MP-WEIXIN -->
+    <privacy />
+    <!-- #endif -->
     <image mode="widthFix" src="@img/logo.png" class="logo"></image>
     <template v-if="env === 'production'">
       <button
@@ -44,6 +47,7 @@
 </template>
 
 <script>
+  import { getAppletLoginStatus} from '@/utils/auth'
   import { checkGetPhoneVersion } from '@/utils';
   import { mapState, mapActions } from 'pinia';
   import { useUserStore } from '@/store';
@@ -67,7 +71,8 @@
         voteId: '',
         env: import.meta.env.MODE,
         checkGetPhoneVersion: true,
-        lotteryCode: ''
+        lotteryCode: '',
+        appletLoginStatus: getAppletLoginStatus(),
       };
     },
     onLoad(option) {
@@ -82,7 +87,7 @@
       this.checkGetPhoneVersion = checkGetPhoneVersion()
     },
     computed: {
-      ...mapState(useUserStore, ['recommendCode', 'jigsawCode','appletLoginStatus', 'userDistributorCode']),
+      ...mapState(useUserStore, ['recommendCode', 'jigsawCode', 'userDistributorCode']),
     },
     methods: {
       ...mapActions(useUserStore, [
@@ -95,8 +100,7 @@
         'setRecommendCode',
         'setMobileArea',
         'getExperienceCourseDetail',
-        'getAppletLoginStatus',
-        'getCourseAdviserQrCode'
+        'setAppletLoginStatus'
       ]),
       weChatLogin() {
         if (!this.checkGetPhoneVersion) {
@@ -168,9 +172,13 @@
                 this.setUserImg(resultData.userImg)
                 this.setRecommendCode(resultData.recommendCode)
                 this.setMobileArea(resultData.mobileArea)
-                this.getCourseAdviserQrCode()
-                if (val!=='isBaseLogin') { // 刷新微信账号绑定状态
-                  this.getAppletLoginStatus(loginRes.code)
+                if (val!=='isBaseLogin' && getAppletLoginStatus()!==1) { // 刷新微信账号绑定状态
+                  uni.login({
+                    provider: 'weixin',
+                    success: (res) => {
+                      this.setAppletLoginStatus(res.code)
+                    },
+                  });
                 }
                 // uni.$emit('refreshInfo');
                 if (this.redirect && this.redirect !== 'undefined') {

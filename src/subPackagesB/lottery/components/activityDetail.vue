@@ -40,8 +40,7 @@
       </view>
       <view class="time-wrap">
         <view class="title">活动说明</view>
-        <text class="text mb-5 line-height" v-html="detailData.activityExplain">{{detailData.activityExplain}}
-        </text>
+        <rich-text :nodes="detailData.activityExplain" class="content text mb-5 line-height"></rich-text>
       </view>
     </view>
     <view class="explain">*本活动最终解释权归深圳青豆教育科技有限公司所有</view>
@@ -169,12 +168,12 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       position: relative;
-      width: 606rpx;
+      width: 626rpx;
       min-height: 145rpx;
       background: #FFF2DA;
       border-radius: 32rpx 32rpx 32rpx 32rpx;
       border: 1rpx solid #FFFFFF;
-      padding: 100rpx 40rpx 10rpx;
+      padding: 100rpx 30rpx 10rpx;
       margin-bottom: 54rpx;
 
       .prize-wrap {
@@ -235,6 +234,9 @@ export default {
           line-height: 38rpx;
           margin-top: 24rpx;
           margin-bottom: 20rpx;
+          img {
+            width: 100%;
+          }
         }
 
         .line-height {

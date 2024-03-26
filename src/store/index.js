@@ -8,3 +8,4 @@ export default store;
 
 export * from './modules/user';
 export * from './modules/content';
+export * from './modules/datebook';

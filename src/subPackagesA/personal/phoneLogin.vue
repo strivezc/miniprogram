@@ -47,6 +47,7 @@
 </template>
 
 <script>
+  import { getAppletLoginStatus} from '@/utils/auth'
   import { validateMobile } from '@/utils/validate.js';
   import { mapState, mapActions } from 'pinia';
   import { useUserStore } from '@/store';
@@ -77,7 +78,8 @@
         checked: true,
         // recommendCode:'',
         voteId: '',
-        lotteryCode: ''
+        lotteryCode: '',
+        appletLoginStatus: getAppletLoginStatus(),
       };
     },
     onLoad(option) {
@@ -114,8 +116,7 @@
         'setRecommendCode',
         'setMobileArea',
         'getExperienceCourseDetail',
-        'getAppletLoginStatus',
-        'getCourseAdviserQrCode'
+        'setAppletLoginStatus'
       ]),
       switchTo(pageName) {
         this.currentPage = pageName;
@@ -244,8 +245,14 @@
               this.setUserImg(resultData.userImg)
               this.setRecommendCode(resultData.recommendCode)
               this.setMobileArea(resultData.mobileArea)
-              this.getCourseAdviserQrCode()
-              this.getAppletLoginStatus(loginRes.code)
+              if (getAppletLoginStatus()!==1) {
+                uni.login({
+                  provider: 'weixin',
+                  success: (res) => {
+                    this.setAppletLoginStatus(res.code)
+                  },
+                });
+              }
               if (this.redirect && this.redirect !== 'undefined') {
                 if (this.redirect.indexOf('jigsawActivity/gameArea') > -1) {
                   uni.$emit('refreshSwitch')

@@ -61,6 +61,7 @@
           <view class="activity-wrap" v-if="haveLottery && haveStepTask">
             <image mode="widthFix"
                    class="item"
+                   @click="toStepTask"
                    src="https://cos.talk915.com/data/image/4a8c7d63008b4bbd89e2478bbea15b32.png"></image>
             <image mode="widthFix"
                    class="item"
@@ -76,6 +77,7 @@
           <view class="banner-wrap" v-else-if="!haveLottery && haveStepTask">
             <image mode="widthFix"
                    class="banner"
+                   @click="toStepTask"
                    src="https://cos.talk915.com/data/image/aa8586e734b74b50bd71c21a30d4eb8e.png"></image>
           </view>
         </template>
@@ -87,6 +89,8 @@
 
 <script setup>
 import LotteryService from '@/api/LotteryService'
+import StepTaskService from '@/api/StepTaskService'
+import CommonService from '@/api/CommonService'
 import qrcode from '@/subPackagesA/images/upload-pic.png'
 import { saveNetWorkImage } from '@/utils'
 import { useUserStore } from '@/store'
@@ -101,6 +105,11 @@ let show = ref(false)
 function toLottery() {
   uni.navigateTo({
     url: `/subPackagesB/lottery/index?lotteryCode=${lotteryCode.value}`
+  })
+}
+function toStepTask() {
+  uni.navigateTo({
+    url: '/subPackagesA/home/stepTask'
   })
 }
 
@@ -123,14 +132,35 @@ const queryNowRaffleInfo = async () => {
     console.log(e, 'error')
   }
 }
+const queryStepStatus=async ()=> {
+  try {
+    const { resultData } = await StepTaskService.queryStepStatus()
+    haveStepTask.value = resultData === 0
+  } catch (e) {
+    console.log(e, 'error')
+  }
+}
 
 userStore.getExperienceCourseDetail().then((res) => {
   isAlreadyClass.value = res.status !== '3'
+  if (isAlreadyClass.value) {
+    queryNowRaffleInfo()
+    queryStepStatus()
+  }
 })
-queryNowRaffleInfo()
+if (!userStore.courseAdviserQrCode) {
+  userStore.getCourseAdviserQrCode()
+}
+if (!userStore.mobileArea) {
+  CommonService.changeMobileArea().then(res => {
+    if (res.resultData) {
+      userStore.setMobileArea(res.resultData)
+    }
+  })
+}
 setTimeout(() => {
   show.value = !show.value
-},200)
+}, 200)
 </script>
 
 <style scoped lang="scss">
@@ -354,8 +384,8 @@ setTimeout(() => {
   }
 
   .task-title {
+    margin-top: 64rpx;
     position: relative;
-    margin-top: -23rpx;
     margin-bottom: 41rpx;
     color: #FF5C01;
     font-size: 36rpx;

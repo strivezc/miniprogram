@@ -76,8 +76,8 @@ const state = reactive({
   text: 'T0：完全没有英语基础，认识简单的字母，零星单词，无法沟通',
   activeIndex: 0,
   timeData: [
-    { time: '6:00~8:00' },
-    { time: '8:00~10:00' },
+    { time: '06:00~08:00' },
+    { time: '08:00~10:00' },
     { time: '10:00~12:00' },
     { time: '12:00~14:00' },
     { time: '14:00~16:00' },
@@ -126,7 +126,7 @@ const getClassDateAndWeeks = async () => {
   try {
     const { resultData } = await DatebookService.getTrialClassTime()
     state.classDateAndWeeks = resultData.classDateAndWeeks
-    state.nowTime = resultData.nowTime
+    state.nowTime = resultData.nowTime.replace(/-/g, '/')
     if (state.classDateAndWeeks && state.classDateAndWeeks.length > 0) {
       changeDateTime(state.classDateAndWeeks[0])
     }
@@ -137,7 +137,8 @@ const getClassDateAndWeeks = async () => {
 
 function isDisabledTime(time) {
   const startTime = time ? time.split('~')[0] : '00:00'
-  return new Date(state.nowTime) >= new Date(`${state.dateTime} ${startTime}`)
+  const dateTime=state.dateTime.replace(/-/g, '/')
+  return new Date(state.nowTime) >= new Date(`${dateTime} ${startTime}`)
 }
 
 function changeTime(item) {

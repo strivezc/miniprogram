@@ -122,4 +122,17 @@ export default {
       data,
     });
   },
+  mobileArea() {
+    return request({
+      url: `${requestPort.users}/user/mobileArea`,
+      method: 'get',
+    });
+  },
+  teacherDetails(data) {
+    return request({
+      url: `${requestPort.users}/personCenter/teacherDetails`,
+      method: 'post',
+      data,
+    });
+  },
 };

@@ -1,5 +1,8 @@
 <template>
   <view class="invitationGift" :class="mask ? 'tl-show' : ''">
+    <!-- #ifdef MP-WEIXIN -->
+    <privacy />
+    <!-- #endif -->
     <view class="rules" @click="openRules">邀请规则</view>
     <image mode="widthFix" class="img" @error="imageError" :src="backGroundUrl"></image>
     <view class="btn-bottom">
@@ -183,6 +186,9 @@
 </script>
 
 <style scoped lang="scss">
+  .invitationGift{
+    padding-bottom: calc( 134rpx + env(safe-area-inset-bottom) );
+  }
   .img {
     width: 100%;
   }

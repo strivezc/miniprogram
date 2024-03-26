@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import UserService from '@/api/UserService';
 import CommonService from '@/api/CommonService'
 import JigsawService from '@/api/JigsawService';
-import { getToken, setToken, clearStorageSync,setRecommendCode,setMobileArea } from '@/utils/auth';
+import { getToken,setAppletLoginStatus, setToken,setUserId, clearStorageSync,setRecommendCode,setMobileArea } from '@/utils/auth';
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -24,9 +24,6 @@ export const useUserStore = defineStore('user', {
       status: '3',
       getTrialClass: 0,
       attendClass: 2,
-
-      // 小程序账号绑定状态，0未绑定，1已绑定
-      appletLoginStatus:null
     };
   },
   persist: {
@@ -65,6 +62,7 @@ export const useUserStore = defineStore('user', {
       this.userImg = userImg;
     },
     setUserId(userId) {
+      setUserId(userId)
       this.userId = userId;
     },
     setUserPhone(phone) {
@@ -85,11 +83,11 @@ export const useUserStore = defineStore('user', {
           });
       });
     },
-    getAppletLoginStatus(loginCode){
+    setAppletLoginStatus(loginCode){
       return new Promise((resolve, reject) => {
         UserService.beforeAppletLogin(loginCode)
           .then(({ resultData }) => {
-            this.appletLoginStatus=resultData
+            setAppletLoginStatus(resultData)
             resolve();
           })
           .catch((error) => {

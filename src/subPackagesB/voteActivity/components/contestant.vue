@@ -23,7 +23,9 @@
     >
       <view class="item-wrap" v-for="item in list" :key="item.voteId">
         <view class="voteId">{{ item.voteId }}</view>
-        <image mode="aspectFill" :src="item.contestImg" class="img"></image>
+        <view class="img-wrap">
+          <image mode="aspectFill" :src="item.contestImg" class="img"></image>
+        </view>
         <text class="name">{{ item.userName }}</text>
         <text class="num">{{ item.voteNums ? item.voteNums : 0 }}票</text>
         <view class="bottom-wrap" @click="toIndividualDetail(item.voteId)">
@@ -229,10 +231,15 @@
         margin-right: 38rpx;
       }
 
-      .img {
+      .img-wrap{
         width: 300rpx;
         height: 300rpx;
-        border-radius: 16rpx 16rpx 16rpx 16rpx;
+        overflow: hidden;
+        .img {
+          width: 300rpx;
+          height: 338rpx;
+          border-radius: 16rpx 16rpx 16rpx 16rpx;
+        }
       }
 
       .name {

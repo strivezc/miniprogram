@@ -2,7 +2,7 @@
   <myPopup ref="popup" type="center" @closeAction="closeAction" :closeOnOverlay="false">
     <view class="confirm-wrap">
       <view class="title">{{title}}</view>
-      <view class="text">{{text}}</view>
+      <rich-text class="text" :nodes="text" :style="{'text-align':textAlign}"></rich-text>
       <view class="button-wrap">
         <view class="left" v-if="showCancelButton" @click="close">{{cancelText}}</view>
         <view class="right" @click="submit">{{confirmText}}</view>
@@ -43,7 +43,11 @@ export default {
     confirmText: {
       type: String,
       default: '确认'
-    }
+    },
+    textAlign: {
+      type: String,
+      default: 'center'
+    },
   },
   data() {
     return {}
@@ -87,6 +91,7 @@ export default {
     }
 
     .text {
+      display: block;
       font-size: 28rpx;
       line-height: 42rpx;
       font-weight: 500;
